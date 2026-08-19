@@ -1,0 +1,386 @@
+html, body {
+    height: 100%;
+}
+
+:root {
+    --screen: #02070c;
+    --panel-line: #12364b;
+    --cyan: #38c8ff;
+    --cyan-bright: #9be9ff;
+    --cyan-dim: #32728c;
+    --text: #d8f5ff;
+    --green: #42ee88;
+    --amber: #ffc857;
+}
+
+body {
+    font-family: 'Bahnschrift', 'Segoe UI', sans-serif;
+    background-color: #000;
+    margin: 0;
+    padding: 6px;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tablet-frame {
+    background-color: var(--screen);
+    background-image:
+        linear-gradient(rgba(56, 200, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 200, 255, 0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+    border: 6px solid #080a0c;
+    border-radius: 20px;
+    box-shadow: inset 0 0 0 1px #252b30, inset 0 0 50px #000, 0 10px 35px rgba(0, 0, 0, 0.8);
+    width: min(1024px, calc(100vw - 12px));
+    height: min(600px, calc(100vh - 12px));
+    box-sizing: border-box;
+    flex-shrink: 0;
+    display: flex;
+    overflow: hidden;
+}
+
+.container,
+#icon-container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.icon-card {
+    position: relative;
+    background: rgba(4, 12, 19, 0.92);
+    border: 1px solid var(--panel-line);
+    border-radius: 2px;
+    box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.9), 0 0 12px rgba(56, 200, 255, 0.08);
+    width: 100%;
+    height: 500px;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-align: center;
+}
+
+.icon-card::before,
+.icon-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 24px;
+    height: 2px;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+}
+
+.icon-card::before {
+    left: 0;
+}
+
+.icon-card::after {
+    right: 0;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #03090e;
+    border-bottom: 1px solid var(--cyan-dim);
+    padding: 12px 14px 10px;
+    text-align: center;
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--cyan-bright);
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.status-badge {
+    display: inline-block;
+    margin: 9px 14px 0;
+    padding: 4px 16px;
+    border-radius: 2px;
+    font-size: 0.74rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    color: #00120a;
+    text-transform: uppercase;
+}
+
+.status-running {
+    background-color: var(--green);
+    box-shadow: 0 0 7px var(--green);
+}
+
+.status-standby {
+    background-color: var(--amber);
+    box-shadow: 0 0 7px var(--amber);
+}
+
+.status-maintenance {
+    background-color: #fd7e14;
+    box-shadow: 0 0 6px #fd7e14;
+}
+
+.status-offline {
+    background-color: #5c7085;
+    box-shadow: 0 0 6px #5c7085;
+}
+
+.status-badge.status-running {
+    background-color: var(--green);
+}
+
+.status-badge.status-standby {
+    background-color: var(--amber);
+    color: #171000;
+}
+
+.status-badge.status-maintenance {
+    background-color: #fd7e14;
+}
+
+.status-badge.status-offline {
+    background-color: #5c7085;
+}
+
+.dial-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 10px 14px 5px;
+}
+
+.dial {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: #010509;
+    border: 1px solid var(--cyan-dim);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 24px rgba(0, 132, 190, 0.12), 0 0 7px rgba(56, 200, 255, 0.3);
+}
+
+.dial::before,
+.dial::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.dial::before {
+    inset: 9px;
+    border: 2px solid var(--cyan);
+    box-shadow: 0 0 10px rgba(56, 200, 255, 0.8), inset 0 0 10px rgba(56, 200, 255, 0.3);
+}
+
+.dial::after {
+    inset: 16px;
+    border: 1px solid var(--cyan-dim);
+}
+
+.dial-ticks {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.dial-tick {
+    position: absolute;
+    inset: 19px;
+    transform: rotate(var(--tick-angle));
+}
+
+.dial-tick::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 6px;
+    background: var(--cyan-dim);
+    box-shadow: 0 0 3px var(--cyan);
+}
+
+.dial-tick-major::before {
+    width: 2px;
+    height: 12px;
+    background: var(--cyan-bright);
+    box-shadow: 0 0 5px var(--cyan);
+}
+
+.dial-mark-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    color: #73cdec;
+    font-family: 'Consolas', monospace;
+    font-size: 0.58rem;
+    line-height: 1;
+    text-shadow: 0 0 4px #010509, 0 0 4px #010509, 0 0 4px #010509;
+    transform: translate(-50%, -50%) rotate(var(--mark-angle)) translateY(-87px) rotate(calc(-1 * var(--mark-angle)));
+}
+
+.dial-needle {
+    position: absolute;
+    z-index: 2;
+    left: calc(50% - 1px);
+    bottom: 50%;
+    width: 2px;
+    height: 96px;
+    background: linear-gradient(to top, var(--cyan-bright), #fff);
+    box-shadow: 0 0 8px var(--cyan);
+    transform-origin: 50% 100%;
+    transform: rotate(var(--needle-angle));
+}
+
+.dial-needle-hub {
+    position: absolute;
+    z-index: 4;
+    width: 9px;
+    height: 9px;
+    border: 2px solid var(--cyan-bright);
+    border-radius: 50%;
+    background: #02070c;
+    box-shadow: 0 0 8px var(--cyan);
+}
+
+.dial-core {
+    position: relative;
+    z-index: 3;
+    width: 138px;
+    height: 138px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(56, 200, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(1, 8, 13, 0.94);
+    box-shadow: inset 0 0 18px rgba(56, 200, 255, 0.08);
+}
+
+.dial.status-running {
+    border-color: var(--cyan-dim);
+    box-shadow: inset 0 0 24px rgba(0, 132, 190, 0.12), 0 0 7px rgba(56, 200, 255, 0.3);
+}
+
+.dial.status-standby {
+    border-color: var(--cyan-dim);
+    box-shadow: inset 0 0 24px rgba(0, 132, 190, 0.08), 0 0 5px rgba(56, 200, 255, 0.22);
+}
+
+.dial.status-maintenance {
+    border-color: #fd7e14;
+}
+
+.dial.status-offline {
+    border-color: #5c7085;
+}
+
+.dial-rpm {
+    font-family: 'Consolas', monospace;
+    font-size: 1.9rem;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1;
+    transform: translateY(-7px);
+}
+
+.dial-rpm-unit {
+    position: relative;
+    z-index: 5;
+    font-size: 0.6rem;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: -5px;
+    margin-bottom: 12px;
+    transform: translateY(-4px);
+    text-shadow: 0 0 5px #02070c, 0 0 5px #02070c;
+}
+
+.dial-voltage {
+    font-family: 'Consolas', monospace;
+    font-size: 1.18rem;
+    color: var(--text);
+    letter-spacing: 0.5px;
+}
+
+.dial-voltage-unit {
+    color: var(--cyan);
+    font-size: 0.58rem;
+    letter-spacing: 0;
+}
+
+.gauge-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 14px 10px;
+}
+
+.gauge-row {
+    display: grid;
+    grid-template-columns: 72px 1fr 72px;
+    align-items: center;
+    gap: 8px;
+    min-height: 32px;
+    border-bottom: 1px solid rgba(56, 200, 255, 0.12);
+}
+
+.gauge-label {
+    font-size: 0.62rem;
+    color: var(--cyan-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gauge-track {
+    background: #010509;
+    border: 1px solid var(--panel-line);
+    border-radius: 0;
+    height: 5px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.gauge-fill {
+    height: 100%;
+    background: var(--cyan);
+    border-radius: 0;
+    box-shadow: 0 0 7px var(--cyan);
+}
+
+.gauge-value {
+    font-family: 'Consolas', monospace;
+    font-size: 0.72rem;
+    color: var(--text);
+    text-align: center;
+    background: #010509;
+    border: 1px solid var(--cyan-dim);
+    border-radius: 0;
+    padding: 4px;
+}
