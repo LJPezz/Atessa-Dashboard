@@ -33,7 +33,7 @@ button { color: inherit; font: inherit; }
     width: min(1024px, 100vw);
     height: min(600px, 100vh);
     display: grid;
-    grid-template-rows: minmax(0, 1fr) 38px;
+    grid-template-rows: minmax(0, 1fr);
     overflow: hidden;
     border: 1px solid #233744;
     background: var(--screen);
@@ -97,6 +97,8 @@ button { color: inherit; font: inherit; }
 .rpm-readout strong { font-family: Consolas, monospace; font-size: 1.8rem; font-weight: 400; line-height: 1; }
 .rpm-readout span { margin-top: 4px; color: var(--muted); font-size: 0.48rem; letter-spacing: 0.12em; }
 .rpm-scale { position: absolute; top: 137px; width: 174px; display: flex; align-items: center; justify-content: space-between; color: #a7bfcc; font-family: Consolas, monospace; font-size: 0.56rem; transform: translateX(10px); }
+.rpm-scale span:first-child { position: relative; left: 4px; }
+.rpm-scale span:last-child { position: relative; right: 4px; }
 .load-label { position: absolute; bottom: 11px; color: var(--muted); font-size: 0.46rem; letter-spacing: 0.14em; }
 
 .metrics-grid { min-height: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); padding: 12px 12px 9px; }
@@ -114,18 +116,11 @@ button { color: inherit; font: inherit; }
 .metric-value strong { font-family: Consolas, monospace; font-size: 0.78rem; font-weight: 400; line-height: 1; }
 .metric-value span { color: var(--muted); font-size: 0.43rem; }
 
-.alarm-strip { display: flex; align-items: center; justify-content: space-between; padding: 0 17px; border-top: 1px solid var(--line); background: #08141f; color: var(--muted); font-size: 0.53rem; }
-.alarm-strip > div, .alarm-summary, .alarm-summary span { display: flex; align-items: center; gap: 7px; }
-.alarm-icon { width: 17px; height: 17px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--muted); }
-.alarm-strip strong { color: var(--text); font-weight: 500; }
-.alarm-summary { gap: 22px; }
-
 @media (max-width: 760px) {
     body { display: block; overflow: auto; }
-    .console-frame { width: 100%; height: auto; min-height: 100vh; grid-template-rows: auto 38px; }
+    .console-frame { width: 100%; height: auto; min-height: 100vh; }
     .system-nav { display: none; }
     .topbar { grid-template-columns: 44px 1fr auto; }
     #engine-dashboard { grid-template-columns: 1fr; }
     .engine-panel { min-height: 430px; }
-    .alarm-summary span:last-child { display: none; }
 }
