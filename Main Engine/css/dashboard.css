@@ -1,0 +1,253 @@
+:root {
+    --screen: #02070c;
+    --panel-line: #12364b;
+    --cyan: #38c8ff;
+    --cyan-bright: #9be9ff;
+    --cyan-dim: #32728c;
+    --text: #d8f5ff;
+    --green: #42ee88;
+    --amber: #ffc857;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+    margin: 0;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #000;
+    color: var(--text);
+    font-family: Bahnschrift, "Segoe UI", sans-serif;
+}
+
+.console-frame {
+    width: min(1024px, calc(100vw - 12px));
+    height: min(600px, calc(100vh - 12px));
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 6px solid #080a0c;
+    border-radius: 20px;
+    background-color: var(--screen);
+    background-image: linear-gradient(rgba(56, 200, 255, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 200, 255, 0.025) 1px, transparent 1px);
+    background-size: 32px 32px;
+    box-shadow: inset 0 0 0 1px #252b30, inset 0 0 50px #000, 0 10px 35px rgba(0, 0, 0, 0.8);
+}
+
+#engine-dashboard {
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 380px);
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+}
+
+.engine-card {
+    position: relative;
+    width: 100%;
+    height: 540px;
+    overflow: hidden;
+    border: 1px solid var(--panel-line);
+    border-radius: 2px;
+    background: rgba(4, 12, 19, 0.92);
+    text-align: center;
+    box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.9), 0 0 12px rgba(56, 200, 255, 0.08);
+}
+
+.engine-card::before, .engine-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 24px;
+    height: 2px;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+}
+.engine-card::before { left: 0; }
+.engine-card::after { right: 0; }
+
+.panel-header {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--cyan-dim);
+    background: #03090e;
+}
+
+.panel-header h2 {
+    margin: 0;
+    color: var(--cyan-bright);
+    font-size: 0.78rem;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+
+.status-badge {
+    position: absolute;
+    top: 49px;
+    right: 12px;
+    z-index: 6;
+    padding: 4px 12px;
+    border-radius: 2px;
+    color: #171000;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-running { background: var(--green); box-shadow: 0 0 7px var(--green); }
+.status-standby { background: var(--amber); box-shadow: 0 0 7px var(--amber); }
+.status-maintenance { background: #fd7e14; box-shadow: 0 0 7px #fd7e14; }
+.status-offline { background: #5c7085; box-shadow: 0 0 7px #5c7085; }
+
+.engine-content {
+    height: calc(100% - 40px);
+    display: grid;
+    grid-template-rows: 200px minmax(0, 1fr);
+    align-items: center;
+    justify-items: center;
+    gap: 12px;
+    padding: 8px 12px 12px;
+}
+
+.dial {
+    position: relative;
+    width: 188px;
+    height: 188px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--cyan-dim);
+    border-radius: 50%;
+    background: #010509;
+    box-shadow: inset 0 0 24px rgba(0, 132, 190, 0.12), 0 0 7px rgba(56, 200, 255, 0.3);
+}
+
+.dial::before, .dial::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
+.dial::before { inset: 8px; border: 2px solid var(--cyan); box-shadow: 0 0 10px rgba(56, 200, 255, 0.8), inset 0 0 10px rgba(56, 200, 255, 0.3); }
+.dial::after { inset: 14px; border: 1px solid var(--cyan-dim); }
+
+.dial-ticks { position: absolute; inset: 0; border-radius: 50%; }
+.dial-tick { position: absolute; inset: 16px; transform: rotate(var(--tick-angle)); }
+.dial-tick::before { content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 5px; background: var(--cyan-dim); box-shadow: 0 0 3px var(--cyan); }
+.dial-tick-major::before { width: 2px; height: 9px; background: var(--cyan-bright); }
+
+.dial-mark-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    color: #73cdec;
+    font-family: Consolas, monospace;
+    font-size: 0.48rem;
+    line-height: 1;
+    text-shadow: 0 0 4px #010509, 0 0 4px #010509;
+    transform: translate(-50%, -50%) rotate(var(--mark-angle)) translateY(-64px) rotate(calc(-1 * var(--mark-angle)));
+}
+
+.dial-needle {
+    position: absolute;
+    z-index: 3;
+    left: calc(50% - 1px);
+    bottom: 50%;
+    width: 2px;
+    height: 70px;
+    background: linear-gradient(to top, var(--cyan-bright), #fff);
+    box-shadow: 0 0 8px var(--cyan);
+    transform: rotate(var(--needle-angle));
+    transform-origin: 50% 100%;
+}
+
+.dial-needle-hub { position: absolute; z-index: 5; width: 9px; height: 9px; border: 2px solid var(--cyan-bright); border-radius: 50%; background: #02070c; box-shadow: 0 0 8px var(--cyan); }
+
+.dial-core {
+    z-index: 4;
+    width: 106px;
+    height: 106px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 48px;
+    border: 1px solid rgba(56, 200, 255, 0.25);
+    border-radius: 50%;
+    background: rgba(1, 8, 13, 0.94);
+}
+
+.dial-rpm { color: var(--text); font-family: Consolas, monospace; font-weight: 400; line-height: 1; }
+.dial-rpm { font-size: 1.45rem; }
+.dial-unit { color: var(--cyan); font-size: 0.5rem; text-transform: uppercase; }
+
+.sensor-grid {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+}
+
+.sensor-row {
+    min-width: 0;
+    min-height: 38px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 78px;
+    grid-template-rows: 14px 10px;
+    align-items: center;
+    column-gap: 6px;
+    padding: 1px 0;
+    border-bottom: 1px solid rgba(56, 200, 255, 0.12);
+}
+
+.sensor-label { overflow: hidden; color: var(--cyan-dim); font-size: 0.54rem; text-align: left; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+.sensor-track { grid-column: 1; height: 5px; overflow: hidden; border: 1px solid var(--panel-line); background: #010509; }
+.sensor-fill { height: 100%; display: block; background: var(--cyan); box-shadow: 0 0 7px var(--cyan); }
+
+.sensor-value {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    overflow: hidden;
+    border: 1px solid var(--cyan-dim);
+    padding: 5px 3px;
+    background: #010509;
+    color: var(--text);
+    font-family: Consolas, monospace;
+    font-size: 0.62rem;
+    font-weight: 400;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+    body { display: block; overflow: auto; padding: 0; }
+    .console-frame { width: 100%; height: auto; min-height: 100vh; border: 0; border-radius: 0; }
+    #engine-dashboard { grid-template-columns: 1fr; }
+    .engine-card { height: auto; min-height: 540px; }
+}
+
+@media (max-width: 540px) {
+    .engine-content { grid-template-columns: 1fr; justify-items: center; }
+    .status-badge { position: static; display: inline-block; margin-top: 8px; }
+    .sensor-grid { width: 100%; grid-auto-flow: row; grid-template-columns: 1fr; grid-template-rows: none; }
+    .sensor-row { min-height: 40px; }
+}
