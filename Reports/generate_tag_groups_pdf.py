@@ -43,19 +43,28 @@ def extract_group(sheet):
     has_header = "name" in first
     if has_header:
         name_index = first.index("name")
+        tag_index = first.index("key") if "key" in first else first.index("tag")
         unit_index = first.index("unit") if "unit" in first else None
         rows = rows[1:]
     else:
         first_value = str(rows[0][0] or "")
         name_index = 1 if "." in first_value else 2
+        tag_index = name_index - 1
         unit_index = 3 if name_index == 1 else 4
 
     entries = []
     for row in rows:
         if len(row) <= name_index or row[name_index] in (None, ""):
             continue
+        tag = row[tag_index] if len(row) > tag_index else ""
         unit = row[unit_index] if unit_index is not None and len(row) > unit_index else ""
-        entries.append((str(row[name_index]).strip(), str(unit or "").strip()))
+        entries.append(
+            (
+                str(tag or "").strip(),
+                str(row[name_index]).strip(),
+                str(unit or "").strip(),
+            )
+        )
     return entries
 
 
@@ -133,6 +142,13 @@ def build_pdf():
         alignment=TA_CENTER,
         textColor=colors.HexColor("#49636E"),
     )
+    tag_style = ParagraphStyle(
+        "Tag",
+        parent=cell_style,
+        fontSize=6.5,
+        leading=8,
+        textColor=colors.HexColor("#49636E"),
+    )
 
     document = SimpleDocTemplate(
         str(OUTPUT),
@@ -194,12 +210,20 @@ def build_pdf():
         story.append(Paragraph(escape(group_name), group_style))
         story.append(Paragraph(f"{len(entries)} names in this group", count_style))
 
-        table_rows = [["Name", "Unit"]]
+        table_rows = [["Tag Name", "Name", "Unit"]]
         table_rows.extend(
-            [Paragraph(escape(name), cell_style), Paragraph(escape(unit), unit_style)]
-            for name, unit in entries
+            [
+                Paragraph(escape(tag), tag_style),
+                Paragraph(escape(name), cell_style),
+                Paragraph(escape(unit), unit_style),
+            ]
+            for tag, name, unit in entries
         )
-        table = LongTable(table_rows, colWidths=[6.55 * inch, 0.65 * inch], repeatRows=1)
+        table = LongTable(
+            table_rows,
+            colWidths=[3.1 * inch, 3.45 * inch, 0.65 * inch],
+            repeatRows=1,
+        )
         table.setStyle(
             TableStyle(
                 [
@@ -207,7 +231,7 @@ def build_pdf():
                     ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
                     ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                     ("FONTSIZE", (0, 0), (-1, 0), 8),
-                    ("ALIGN", (1, 0), (1, -1), "CENTER"),
+                    ("ALIGN", (2, 0), (2, -1), "CENTER"),
                     ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                     ("LINEBELOW", (0, 0), (-1, -1), 0.3, colors.HexColor("#C8D5DA")),
                     ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F5F8F9")]),
