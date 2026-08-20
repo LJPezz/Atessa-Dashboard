@@ -1,0 +1,23 @@
+const sensorWidgets = [
+    { tag: "inlet_lube_oil_pressure.value", label: "Inlet Lube Oil Pressure", shortLabel: "Lube oil", value: 4.5, min: 0, max: 8, unit: "bar" },
+    { tag: "ht_cooling_water_aftercooler_temperature.value", label: "HT Cooling Water Temperature", shortLabel: "HT cooling water", value: 78, min: 0, max: 120, unit: "°C" },
+    { tag: "fuel_oil_inlet_pressure.value", label: "Fuel Oil Inlet Pressure", shortLabel: "Fuel oil inlet", value: 5.2, min: 0, max: 10, unit: "bar" },
+    { tag: "charge_air_pressure.value", label: "Charge Air Pressure", shortLabel: "Charge air", value: 2.1, min: 0, max: 5, unit: "bar" },
+    { tag: "derived.max_cylinder_exhaust_temperature", label: "Max Cylinder Exhaust Temperature", shortLabel: "Max exhaust", value: 430, min: 0, max: 700, unit: "°C" }
+];
+
+function createEngine(id, name, tagPrefix, valueOffset = 0) {
+    return {
+        id,
+        name,
+        tagPrefix,
+        status: "Standby",
+        rpm: { value: 0, min: 0, max: 2100, unit: "RPM" },
+        sensors: sensorWidgets.map(sensor => ({ ...sensor, value: sensor.value + valueOffset }))
+    };
+}
+
+export default [
+    createEngine("port", "Port Main Engine", "vms.port_main_engine"),
+    createEngine("starboard", "Starboard Main Engine", "vms.stbd_main_engine", 0.2)
+];

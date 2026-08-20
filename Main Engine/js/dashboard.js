@@ -1,4 +1,4 @@
-import engine from './engine-data.js';
+import engines from './engine-data.js';
 
 const dashboard = document.getElementById('engine-dashboard');
 const statusClassMap = {
@@ -21,6 +21,7 @@ function buildDial(engine) {
     dial.className = `dial ${statusClassMap[engine.status] || 'status-offline'}`;
     dial.dataset.rpmMin = engine.rpm.min;
     dial.dataset.rpmMax = engine.rpm.max;
+    dial.dataset.tag = `${engine.tagPrefix}.rpm.value`;
 
     const ticks = document.createElement('div');
     ticks.className = 'dial-ticks';
@@ -52,13 +53,14 @@ function buildDial(engine) {
     return dial;
 }
 
-function buildSensorRow(sensor) {
+function buildSensorRow(sensor, tagPrefix) {
     const row = document.createElement('div');
     row.className = 'sensor-row';
     row.dataset.baseValue = sensor.value;
     row.dataset.minValue = sensor.min;
     row.dataset.maxValue = sensor.max;
     row.dataset.unit = sensor.unit;
+    row.dataset.tag = `${tagPrefix}.${sensor.tag}`;
     const fillPercent = clamp(((sensor.value - sensor.min) / (sensor.max - sensor.min)) * 100, 0, 100);
     row.innerHTML = `
         <span class="sensor-label">${sensor.label}</span>
@@ -86,7 +88,7 @@ function buildEngineCard(engine) {
 
     const sensorGrid = document.createElement('div');
     sensorGrid.className = 'sensor-grid';
-    engine.sensors.forEach(sensor => sensorGrid.appendChild(buildSensorRow(sensor)));
+    engine.sensors.forEach(sensor => sensorGrid.appendChild(buildSensorRow(sensor, engine.tagPrefix)));
     content.appendChild(sensorGrid);
     card.appendChild(content);
     return card;
@@ -114,6 +116,7 @@ function startDemo() {
     function animate(timestamp) {
         const seconds = timestamp / 1000;
         cards.forEach((card, cardIndex) => {
+            const engine = engines[cardIndex];
             const rpmAmplitude = engine.status === 'Running' ? 90 : 3;
             updateDial(card.querySelector('.dial'), engine.rpm.value + Math.sin(seconds * 0.45 + cardIndex) * rpmAmplitude);
 
@@ -129,5 +132,5 @@ function startDemo() {
     requestAnimationFrame(animate);
 }
 
-dashboard.appendChild(buildEngineCard(engine));
+engines.forEach(engine => dashboard.appendChild(buildEngineCard(engine)));
 startDemo();

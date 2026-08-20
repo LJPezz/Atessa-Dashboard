@@ -40,7 +40,7 @@ body {
 #engine-dashboard {
     height: 100%;
     display: grid;
-    grid-template-columns: minmax(0, 380px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     justify-content: center;
     align-items: center;
     gap: 14px;
@@ -118,7 +118,7 @@ body {
 .engine-content {
     height: calc(100% - 40px);
     display: grid;
-    grid-template-rows: 200px minmax(0, 1fr);
+    grid-template-rows: 230px minmax(0, 1fr);
     align-items: center;
     justify-items: center;
     gap: 12px;
@@ -127,8 +127,8 @@ body {
 
 .dial {
     position: relative;
-    width: 188px;
-    height: 188px;
+    width: 218px;
+    height: 218px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -147,8 +147,8 @@ body {
 .dial::before { inset: 8px; border: 2px solid var(--cyan); box-shadow: 0 0 10px rgba(56, 200, 255, 0.8), inset 0 0 10px rgba(56, 200, 255, 0.3); }
 .dial::after { inset: 14px; border: 1px solid var(--cyan-dim); }
 
-.dial-ticks { position: absolute; inset: 0; border-radius: 50%; }
-.dial-tick { position: absolute; inset: 16px; transform: rotate(var(--tick-angle)); }
+.dial-ticks { position: absolute; inset: 0; z-index: 1; border-radius: 50%; }
+.dial-tick { position: absolute; inset: 18px; transform: rotate(var(--tick-angle)); }
 .dial-tick::before { content: ""; position: absolute; top: 0; left: 50%; width: 1px; height: 5px; background: var(--cyan-dim); box-shadow: 0 0 3px var(--cyan); }
 .dial-tick-major::before { width: 2px; height: 9px; background: var(--cyan-bright); }
 
@@ -156,13 +156,15 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    z-index: 2;
+    z-index: 6;
+    padding: 1px 2px;
+    background: #010509;
     color: #73cdec;
     font-family: Consolas, monospace;
-    font-size: 0.48rem;
+    font-size: 0.52rem;
     line-height: 1;
     text-shadow: 0 0 4px #010509, 0 0 4px #010509;
-    transform: translate(-50%, -50%) rotate(var(--mark-angle)) translateY(-64px) rotate(calc(-1 * var(--mark-angle)));
+    transform: translate(-50%, -50%) rotate(var(--mark-angle)) translateY(-76px) rotate(calc(-1 * var(--mark-angle)));
 }
 
 .dial-needle {
@@ -171,7 +173,7 @@ body {
     left: calc(50% - 1px);
     bottom: 50%;
     width: 2px;
-    height: 70px;
+    height: 82px;
     background: linear-gradient(to top, var(--cyan-bright), #fff);
     box-shadow: 0 0 8px var(--cyan);
     transform: rotate(var(--needle-angle));
@@ -182,13 +184,13 @@ body {
 
 .dial-core {
     z-index: 4;
-    width: 106px;
-    height: 106px;
+    width: 118px;
+    height: 118px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-bottom: 48px;
+    padding-bottom: 54px;
     border: 1px solid rgba(56, 200, 255, 0.25);
     border-radius: 50%;
     background: rgba(1, 8, 13, 0.94);
